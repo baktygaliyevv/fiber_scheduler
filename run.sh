@@ -1,3 +1,3 @@
-g++ -std=c++17 -o task1.o src/main.cpp src/task1.cpp context/context.s
-chmod +x task1.o
-./task1.o
+g++ -std=c++17 -o main.o src/main.cpp context/context.s
+chmod +x main.o
+./main.o

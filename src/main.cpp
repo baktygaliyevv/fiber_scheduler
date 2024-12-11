@@ -1,47 +1,35 @@
 #include <iostream>
 #include "../include/fiber.hpp"
+#include "../include/scheduler.hpp"
 #include "../context/context.hpp"
 
-Context scheduler_context;
+using namespace std;
 
-volatile int state = 0;
+Scheduler s;
 
-extern "C" void fiber_exit() {
-    set_context(&scheduler_context);
+void func1() {
+    cout << "fiber 1" << endl;
+    int* dp = static_cast<int*>(s.current_fiber_->get_data());
+    cout << "fiber 1: " << *dp << endl;
+    *dp += 1;
+    s.fiber_exit();
 }
 
-void foo() {
-    std::cout << "foo" << std::endl;
-    fiber_exit();
-}
-
-void bar() {
-    std::cout << "bar" << std::endl;
-    fiber_exit();
+void func2() {
+    int* dp = static_cast<int*>(s.current_fiber_->get_data());
+    cout << "fiber 2: " << *dp << endl;
+    s.fiber_exit();
 }
 
 int main() {
-    Fiber fiberFoo(foo);
-    Fiber fiberBar(bar);
+    int d = 10;
+    int* dp = &d;
+    Fiber f2(func2, dp);
+    Fiber f1(func1, dp);
 
-    Context* contextFoo = fiberFoo.get_context();
-    Context* contextBar = fiberBar.get_context();
+    s.spawn(&f1);
+    s.spawn(&f2);
 
-    std::cout << "switching to foo" << std::endl;
-    get_context(&scheduler_context);
-    if (state == 0) {
-        state = 1;
-        set_context(contextFoo); 
-    }
-
-    std::cout << "switching to bar" << std::endl;
-    get_context(&scheduler_context);
-    if (state == 1) {
-        state = 2;
-        set_context(contextBar);
-    }
-    
-    std::cout << "back to main" << std::endl;
-
+    s.do_it();
     return 0;
 }
