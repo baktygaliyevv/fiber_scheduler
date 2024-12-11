@@ -4,6 +4,12 @@
 
 Context scheduler_context;
 
+volatile int state = 0;
+
+extern "C" void fiber_exit() {
+    set_context(&scheduler_context);
+}
+
 void foo() {
     std::cout << "foo" << std::endl;
     fiber_exit();
@@ -23,12 +29,19 @@ int main() {
 
     std::cout << "switching to foo" << std::endl;
     get_context(&scheduler_context);
-    set_context(contextFoo);
+    if (state == 0) {
+        state = 1;
+        set_context(contextFoo); 
+    }
 
     std::cout << "switching to bar" << std::endl;
     get_context(&scheduler_context);
-    set_context(contextBar);
-
+    if (state == 1) {
+        state = 2;
+        set_context(contextBar);
+    }
+    
     std::cout << "back to main" << std::endl;
+
     return 0;
 }
