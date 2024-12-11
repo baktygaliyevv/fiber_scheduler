@@ -21,13 +21,6 @@ class Fiber {
 
             context_.rip = reinterpret_cast<void*>(function);
             context_.rsp = sp;
-
-            context_.rbx = nullptr;
-            context_.rbp = nullptr;
-            context_.r12 = nullptr;
-            context_.r13 = nullptr;
-            context_.r14 = nullptr;
-            context_.r15 = nullptr;
         }
         Context* get_context() {
             return &context_;
