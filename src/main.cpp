@@ -8,16 +8,18 @@ using namespace std;
 Scheduler s;
 
 void func1() {
-    cout << "fiber 1" << endl;
+    cout << "fiber 1 before" << endl;
+    s.yield();
+    cout << "fiber 1 after" << endl;
     int* dp = static_cast<int*>(s.current_fiber_->get_data());
     cout << "fiber 1: " << *dp << endl;
-    *dp += 1;
     s.fiber_exit();
 }
 
 void func2() {
     int* dp = static_cast<int*>(s.current_fiber_->get_data());
     cout << "fiber 2: " << *dp << endl;
+    *dp += 1;
     s.fiber_exit();
 }
 
