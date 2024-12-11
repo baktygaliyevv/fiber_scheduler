@@ -5,8 +5,11 @@ class Fiber {
     private:
         Context context_;
         void* data_;
+        void* stack_;
     public:
         Fiber(void (*function)(), void* data = nullptr) {
+            data_ = data;
+
             char* stack = new char[4096];
             void* sp = stack + 4096;
 
