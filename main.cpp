@@ -1,7 +1,7 @@
 #include <iostream>
-#include "../include/fiber.hpp"
-#include "../include/scheduler.hpp"
-#include "../context/context.hpp"
+#include "include/fiber.hpp"
+#include "include/scheduler.hpp"
+#include "context/context.hpp"
 
 using namespace std;
 

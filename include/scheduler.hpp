@@ -6,7 +6,6 @@
 #include <functional>
 #include <iostream>
 
-// 7, 8 optional, 15
 using namespace std;
 
 struct FiberComparator {
