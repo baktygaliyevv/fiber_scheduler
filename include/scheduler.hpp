@@ -4,7 +4,9 @@
 #include <queue>
 #include <vector>
 #include <functional>
+#include <iostream>
 
+// 7, 8 optional, 15
 using namespace std;
 
 struct FiberComparator {
@@ -24,10 +26,11 @@ public:
         fibers_.push(fiber);
     }
 
-    void do_it() {
+    void do_it(bool debug_mode) {
         while (!fibers_.empty()) {
             current_fiber_ = fibers_.top();
             fibers_.pop();
+            if (debug_mode) debug();
 
             // Switch to the fiber's context
             swap_context(&main_context, current_fiber_->get_context());
@@ -35,6 +38,7 @@ public:
             if (current_fiber_) {
                 fibers_.push(current_fiber_);
             }
+
         }
     }
 
@@ -56,6 +60,36 @@ public:
         //     swap_context(&main_context, &main_context);
         // }
     }
+
+    void debug() {
+        cout << "\nScheduler State" << endl;
+        cout << "Current fiber: ";
+        if (current_fiber_) {
+            cout << "priority: " << current_fiber_->get_priority() << endl;
+        } else {
+            cout << "none" << endl;
+        }
+
+        cout << "Tasks in queue: " << fibers_.size() << endl;
+        if (!fibers_.empty()) {
+            cout << "Queue:" << endl;
+
+            vector<Fiber*> temp_queue;
+            temp_queue.reserve(fibers_.size());
+            while (!fibers_.empty()) {
+                temp_queue.push_back(fibers_.top());
+                fibers_.pop();
+            }
+
+            for (auto f : temp_queue) {
+                cout << "  - Fiber priority: " << f->get_priority() << endl;
+                fibers_.push(f);
+            }
+        } else {
+            cout << "Queue is empty" << endl;
+        }
+    }
+
 
     Context main_context;
 };

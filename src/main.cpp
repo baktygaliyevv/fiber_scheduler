@@ -29,16 +29,20 @@ void func3() {
 }
 
 int main() {
+    bool debug_mode = false;
+
     int d = 10;
     int* dp = &d;
-    Fiber f2(func1, dp, 1);
-    Fiber f1(func2, dp, 2);
+    Fiber f1(func1, dp, 1);
+    Fiber f2(func2, dp, 2);
     Fiber f3(func3, nullptr, 3);
 
     s.spawn(&f1);
     s.spawn(&f2);
     s.spawn(&f3);
 
-    s.do_it();
+    if (debug_mode) s.debug();
+
+    s.do_it(debug_mode);
     return 0;
 }
