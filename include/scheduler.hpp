@@ -5,7 +5,6 @@
 #include <vector>
 #include <functional>
 
-// 1, 4, 7, 8 optional, 15
 using namespace std;
 
 struct FiberComparator {
