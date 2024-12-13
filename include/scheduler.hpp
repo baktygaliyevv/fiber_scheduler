@@ -26,7 +26,7 @@ public:
         fibers_.push(fiber);
     }
 
-    void do_it(bool debug_mode) {
+    void do_it(bool debug_mode = false) {
         while (!fibers_.empty()) {
             current_fiber_ = fibers_.top();
             fibers_.pop();

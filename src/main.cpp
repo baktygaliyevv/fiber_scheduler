@@ -43,6 +43,6 @@ int main() {
 
     if (debug_mode) s.debug();
 
-    s.do_it(debug_mode);
+    s.do_it();
     return 0;
 }
