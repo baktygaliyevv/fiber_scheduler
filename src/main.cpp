@@ -23,14 +23,21 @@ void func2() {
     s.fiber_exit();
 }
 
+void func3() {
+    cout << "fiber 3 (highest priority)" << endl;
+    s.fiber_exit();
+}
+
 int main() {
     int d = 10;
     int* dp = &d;
-    Fiber f2(func2, dp);
-    Fiber f1(func1, dp);
+    Fiber f2(func1, dp, 1);
+    Fiber f1(func2, dp, 2);
+    Fiber f3(func3, nullptr, 3);
 
     s.spawn(&f1);
     s.spawn(&f2);
+    s.spawn(&f3);
 
     s.do_it();
     return 0;

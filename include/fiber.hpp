@@ -6,8 +6,9 @@ class Fiber {
         Context context_;
         void* data_;
         void* stack_;
+        int priority_;
     public:
-        Fiber(void (*function)(), void* data = nullptr) {
+        Fiber(void (*function)(), void* data = nullptr, int priority = 0): priority_(priority) {
             data_ = data;
 
             char* stack = new char[4096];
@@ -28,4 +29,7 @@ class Fiber {
         void* get_data() {
             return data_;
         }
+        int get_priority() const {
+        return priority_;
+    }
     };

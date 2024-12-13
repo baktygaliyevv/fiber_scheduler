@@ -1,31 +1,40 @@
 #pragma once
 #include "fiber.hpp"
 #include "../context/context.hpp"
-#include <deque>
+#include <queue>
+#include <vector>
+#include <functional>
 
+// 1, 4, 7, 8 optional, 15
 using namespace std;
+
+struct FiberComparator {
+    bool operator()(const Fiber* a, const Fiber* b) {
+        return a->get_priority() < b->get_priority();
+    }
+};
 
 class Scheduler {
 private:
-    std::deque<Fiber*> fibers_;
+    priority_queue<Fiber*, vector<Fiber*>, FiberComparator> fibers_;
 
 public:
     Fiber* current_fiber_ = nullptr;
 
     void spawn(Fiber* fiber) {
-        fibers_.push_back(fiber);
+        fibers_.push(fiber);
     }
 
     void do_it() {
         while (!fibers_.empty()) {
-            current_fiber_ = fibers_.front();
-            fibers_.pop_front();
+            current_fiber_ = fibers_.top();
+            fibers_.pop();
 
             // Switch to the fiber's context
             swap_context(&main_context, current_fiber_->get_context());
 
             if (current_fiber_) {
-                fibers_.push_back(current_fiber_);
+                fibers_.push(current_fiber_);
             }
         }
     }
@@ -38,7 +47,7 @@ public:
 
     void yield() {
         if (current_fiber_) {
-            fibers_.push_back(current_fiber_);
+            fibers_.push(current_fiber_);
             Fiber* temp = current_fiber_;
             current_fiber_ = nullptr;
             swap_context(temp->get_context(), &main_context);
