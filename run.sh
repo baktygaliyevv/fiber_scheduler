@@ -1,5 +1,9 @@
 #!/bin/bash
-#!/bin/bash
 g++ -std=c++17 -o main.o main.cpp context/context.s
-chmod +x main.o
-./main.o
+
+if [ $? -eq 0 ]; then
+    chmod +x main.o
+    ./main.o
+else
+    echo "Build failed."
+fi
