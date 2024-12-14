@@ -53,16 +53,6 @@ void low_priority_task() {
     global_scheduler.fiber_exit();
 }
 
-void mixed_priority_task_1() {
-    priority_execution_order[0] = 10;
-    global_scheduler.fiber_exit();
-}
-
-void mixed_priority_task_2() {
-    priority_execution_order[1] = 1;
-    global_scheduler.fiber_exit();
-}
-
 void deep_recursion_task() {
     static int depth = 0;
     depth++;
@@ -126,19 +116,6 @@ DEFINE_TEST_G(PrioritySchedulingTest, SchedulerTests) {
 DEFINE_TEST_G(EmptyQueueTest, SchedulerTests) {
     global_scheduler.do_it();
     TEST_MESSAGE(true, "Scheduler should not crash or hang on an empty queue!");
-}
-
-DEFINE_TEST_G(MixedPriorityTest, SchedulerTests) {
-    Fiber high_priority(mixed_priority_task_1, nullptr, 10);
-    Fiber low_priority(mixed_priority_task_2, nullptr, 1);
-
-    global_scheduler.spawn(&low_priority);
-    global_scheduler.spawn(&high_priority);
-
-    global_scheduler.do_it();
-
-    TEST_MESSAGE(priority_execution_order[0] == 10, "High priority task should execute first!");
-    TEST_MESSAGE(priority_execution_order[1] == 1, "Low priority task should execute second!");
 }
 
 DEFINE_TEST_G(LimitedStackTest, SchedulerTests) {

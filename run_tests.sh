@@ -7,5 +7,5 @@ g++ -std=c++17 -o scheduler_tests.o \
 if [ $? -eq 0 ]; then
     ./scheduler_tests.o
 else
-    echo "Build failed."
+    echo "Build failed"
 fi
