@@ -14,8 +14,6 @@ The repository includes the following submodules:
 - `context`: [Context Repository](https://gitlab.uwe.ac.uk/br-gaster/context)
 - `simpletest`: [Simpletest Repository](https://github.com/kudaba/simpletest_test)
 
----
-
 ## Tasks
 
 ### Task 1: Basic Context Switching
@@ -41,6 +39,8 @@ std::cout << "x: " << x << std::endl;
 
 **Outcome:** Demonstrates the ability to switch context within the same thread. This serves as the foundation for creating fibers with independent stacks.
 
+---
+
 ### Task 2: Fiber and Scheduler Classes
 **Objective**: Develop a `Fiber` class to represent a lightweight task and a `Scheduler` to manage and execute these tasks.
 
@@ -65,6 +65,8 @@ cpp
 ```
 https://github.com/baktygaliyevv/fiber_scheduler/blob/b3008fcc91c931c5714afd042540134834de7a41/src/main.cpp
 ```
+
+---
 
 ### Task 3: Yield and Data Sharing
 **Objective:** Extend the scheduler to support fiber yielding and data sharing.
