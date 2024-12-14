@@ -90,13 +90,12 @@ cpp
 The project includes a comprehensive testing suite using the `SimpleTest` framework.
 
 **Test Coverage:**
-- 
-- 
-- 
-- 
-- 
-- 
-- 
+- **Basic Task Execution Test:** Verifies that tasks are executed correctly in the scheduler.
+- Task Yielding Test: Ensures tasks yield and resume execution in the correct order.
+- High Volume Tasks Test: Validates the scheduler’s ability to handle a large number of tasks.
+- Priority Scheduling Test: Confirms tasks with higher priority execute first.
+- Empty Queue Test: Ensures the scheduler handles an empty queue gracefully.
+- Limited Stack Test: Tests deep recursion and limited stack scenarios.
 
 ## Build and Run
 Talk about .sh files to build and run by one command
