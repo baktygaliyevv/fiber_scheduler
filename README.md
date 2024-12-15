@@ -236,13 +236,11 @@ This script builds and executes the main program.
 bash
 ```
 #!/bin/bash
-g++ -std=c++17 -o scheduler_tests.o \
-    tests/scheduler_tests.cpp simpletest_test/simpletest/simpletest.cpp context/context.s \
-    -Iinclude -Isimpletest_test/simpletest \
-    -lstdc++
+g++ -std=c++17 -o main.o main.cpp context/context.s
 
 if [ $? -eq 0 ]; then
-    ./scheduler_tests.o
+    chmod +x main.o
+    ./main.o
 else
     echo "Build failed"
 fi
