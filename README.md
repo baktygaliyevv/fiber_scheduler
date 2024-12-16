@@ -21,7 +21,6 @@ The repository includes the following submodules:
 
 **Implementation:**
 ```cpp
-// code from our repo should be added, this is a temporary code as an example
 volatile int x = 0;
 Context c;
 
