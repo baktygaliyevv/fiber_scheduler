@@ -20,9 +20,7 @@ The repository includes the following submodules:
 **Objective:** Implement low-level context switching using the context library. This involves saving and restoring the CPU state, including registers and stack pointers.
 
 **Implementation:**
-
-cpp
-```
+```cpp
 // code from our repo should be added, this is a temporary code as an example
 volatile int x = 0;
 Context c;
@@ -34,7 +32,7 @@ if (get_context(&c) == 0) {
 std::cout << "x: " << x << std::endl;
 ```
 **Features:**
-- Utilizes get_context and set_context from the context library.
+- Utilizes `get_context` and `set_context` from the context library.
 - Ensures stack alignment according to the SysV ABI.
 
 **Outcome:** Demonstrates the ability to switch context within the same thread. This serves as the foundation for creating fibers with independent stacks.
@@ -45,25 +43,54 @@ std::cout << "x: " << x << std::endl;
 **Objective**: Develop a `Fiber` class to represent a lightweight task and a `Scheduler` to manage and execute these tasks.
 
 **Fiber Class**:
-cpp
-```
-https://github.com/baktygaliyevv/fiber_scheduler/blob/b3008fcc91c931c5714afd042540134834de7a41/include/fiber.hpp
+```hpp
+class Fiber {
+    private:
+        Context context_;
+        void* data_;
+        void* stack_;
+    public:
+        Fiber(void (*function)(), void* data = nullptr);
+        Context* get_context();
+        void* get_data();
+};
 ```
 
 **Scheduler Class**:
-cpp 
+```hpp
+class Scheduler {
+private:
+    std::deque<Fiber*> fibers_;
+
+public:
+    Fiber* current_fiber_ = nullptr;
+    void spawn(Fiber* fiber);
+    void do_it();
+    void fiber_exit();
+    void yield();
+    Context main_context;
+};
 ```
-https://github.com/baktygaliyevv/fiber_scheduler/blob/b3008fcc91c931c5714afd042540134834de7a41/include/scheduler.hpp
-```
+
 **Key Features**:
 - Implements a round-robin scheduling algorithm.
 - Supports task priority for execution order.
 - Allows fibers to yield control back to the scheduler.
 
 **Test Example**:
-cpp
-```
-https://github.com/baktygaliyevv/fiber_scheduler/blob/b3008fcc91c931c5714afd042540134834de7a41/src/main.cpp
+```cpp
+DEFINE_TEST_G(BasicTaskExecutionTest, SchedulerTests) {
+    Fiber f1(task1);
+    Fiber f2(task2);
+
+    global_scheduler.spawn(&f1);
+    global_scheduler.spawn(&f2);
+    global_scheduler.do_it();
+
+    TEST_MESSAGE(task1_executed, "Task 1 should be executed!");
+    TEST_MESSAGE(task2_executed, "Task 2 should be executed!");
+}
+
 ```
 
 ---
@@ -76,9 +103,24 @@ https://github.com/baktygaliyevv/fiber_scheduler/blob/b3008fcc91c931c5714afd0425
 - **Data Sharing:** Pass data to fibers at creation and enable them to modify shared data.
 
 **Example:**
-cpp
-```
-https://github.com/baktygaliyevv/fiber_scheduler/tree/14be15499d98bb980f8730da2c483d4d710c0353
+```cpp
+void yielding_task1() {
+    step++;
+    global_scheduler.yield();
+    step++;
+    global_scheduler.fiber_exit();
+}
+DEFINE_TEST_G(TaskYieldingTest, SchedulerTests) {
+
+    Fiber f1(yielding_task1);
+    Fiber f2(yielding_task2);
+
+    global_scheduler.spawn(&f1);
+    global_scheduler.spawn(&f2);
+    global_scheduler.do_it();
+
+    TEST_MESSAGE(step == 3, "All tasks should complete in correct order!");
+}
 ```
 
 ## Additional Features
@@ -87,8 +129,7 @@ To enhance the scheduler, priority-based execution was introduced using a `std::
 **Implementation Changes:**
 - Replaced the original `std::deque` with `std::priority_queue` in the Scheduler class.
 - Added a `FiberComparator` struct to compare fibers based on their priority:
-cpp
-```
+```cpp
 struct FiberComparator {
     bool operator()(const Fiber* a, const Fiber* b) {
         return a->get_priority() < b->get_priority();
@@ -96,8 +137,7 @@ struct FiberComparator {
 };
 ```
 - Updated the `Scheduler`’s `spawn()` and `do_it()` methods to use the priority queue:
-cpp
-```
+```cpp
 class Scheduler {
 private:
     std::priority_queue<Fiber*, std::vector<Fiber*>, FiberComparator> fibers_;
@@ -123,8 +163,7 @@ public:
 };
 ```
 **Example Usage**:
-cpp
-```
+```cpp
 Fiber f1(func1, nullptr, 1);  // Low priority
 Fiber f2(func2, nullptr, 10); // High priority
 Fiber f3(func3); // Default priority (0)
@@ -148,8 +187,7 @@ A debug mode was added to the scheduler to provide insights into its internal st
     - The number of tasks in the queue.
     - A detailed list of fibers in the queue with their priorities.
 - Updated do_it to accept an optional debug_mode parameter:
-cpp
-```
+```cpp
 void do_it(bool debug_mode = false) {
     while (!fibers_.empty()) {
         current_fiber_ = fibers_.top();
@@ -165,8 +203,7 @@ void do_it(bool debug_mode = false) {
 }
 ```
 **Debug Function:**
-cpp
-```
+```cpp
 void debug() {
     std::cout << "\nScheduler State" << std::endl;
     std::cout << "Current fiber: ";
@@ -194,8 +231,7 @@ void debug() {
 }
 ```
 **Example Usage:**
-cpp
-```
+```cpp
 bool debug_mode = true;
 Fiber f1(func1, nullptr, 1);
 Fiber f2(func2, nullptr, 2);
@@ -233,8 +269,7 @@ To compile and run the project, two utility scripts are provided:
 
 `run.sh`
 This script builds and executes the main program.
-bash
-```
+```bash
 #!/bin/bash
 g++ -std=c++17 -o main.o main.cpp context/context.s
 
@@ -250,8 +285,7 @@ fi
 
 `run_tests.sh`
 This script builds and executes the unit tests.
-bash
-```
+```bash
 #!/bin/bash
 g++ -std=c++17 -o scheduler_tests.o \
     tests/scheduler_tests.cpp simpletest_test/simpletest/simpletest.cpp context/context.s \
