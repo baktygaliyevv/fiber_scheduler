@@ -302,7 +302,11 @@ fi
 - **Usage:** Execute `./run_tests.sh` to validate the implementation.
 
 ## Screenshots
+**run.sh stdout**
+
 ![screen 1](https://github.com/baktygaliyevv/fiber_scheduler/blob/8267d9462d8b893fef2153ad37bf41d2c73a5892/assets/Code_BuWkC0MxdS.png)
+
+**run_tests.sh stdout**
 
 ![screen 2](https://github.com/baktygaliyevv/fiber_scheduler/blob/8267d9462d8b893fef2153ad37bf41d2c73a5892/assets/Code_vtOq7Bcglu.png)
 
