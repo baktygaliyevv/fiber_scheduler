@@ -55,9 +55,6 @@ public:
             swap_context(temp->get_context(), &main_context);
             current_fiber_ = temp;
         }
-        // } else {
-        //     swap_context(&main_context, &main_context);
-        // }
     }
 
     void debug() {
