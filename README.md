@@ -302,7 +302,9 @@ fi
 - **Usage:** Execute `./run_tests.sh` to validate the implementation.
 
 ## Screenshots
-is going to be added by Denis :D
+![screen 1](https://github.com/baktygaliyevv/fiber_scheduler/blob/8267d9462d8b893fef2153ad37bf41d2c73a5892/assets/Code_BuWkC0MxdS.png)
+
+![screen 2](https://github.com/baktygaliyevv/fiber_scheduler/blob/8267d9462d8b893fef2153ad37bf41d2c73a5892/assets/Code_vtOq7Bcglu.png)
 
 ## Conclusion
 This project successfully implements a cooperative fiber scheduler in C++, demonstrating key concepts of task scheduling, context switching, and priority management. The inclusion of additional features like debugging and priority-based execution enhances its utility and performance.
